@@ -1,0 +1,12 @@
+---
+title: "lab_1"
+author: "Jaenna Wessling"
+date: "2023-01-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Now I am trying to test out Git
