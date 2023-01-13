@@ -1,5 +1,5 @@
 ---
-title: "lab_1"
+title: "lab_1_git_test"
 author: "Jaenna Wessling"
 date: "2023-01-12"
 output: html_document
