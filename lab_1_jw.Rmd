@@ -14,4 +14,33 @@ library(sf)
 library(tmap)
 ```
 
+```{r}
+# Reading in our trees data (use read_csv for more options - better than read.csv)
+sf_trees <- read_csv(here('data', 'sf_trees', "sf_trees.csv"), 
+                     show_col_types = FALSE)
+
+# Always inspect the data first 
+summary(sf_trees)
+names(sf_trees)
+
+
+# Viewing the top 5 most common legal statuses and their respective tree count numbers 
+top_5_status <- sf_trees %>% 
+  group_by(legal_status) %>% 
+  summarize(tree_count = n()) %>% 
+  slice_max(tree_count, n = 5) %>% # just keeps the maximum/largest values of the number of top observations we want 
+  arrange(-tree_count) # arranges selected choices from greatest to least 
+```
+
+
+# Creating a GG Plot of SF trees legal status data 
+```{r}
+ggplot(data = top_5_status, aes(x = fct_reorder(legal_status, tree_count), y = tree_count)) + 
+       # fct_reorder - reorders legal statuses from default alphabetical order to by the greatest tree count
+  geom_col() + 
+  labs(y= 'Tree Count', x = 'Legal Status') + 
+  coord_flip() + # flips the axes 
+  theme_minimal()
+```
+
 
