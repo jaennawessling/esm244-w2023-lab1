@@ -61,3 +61,16 @@ ggplot(data = blackwood_acacia, aes(x = longitude, y = latitude)) +
   geom_point()
 ```
 
+
+
+### Use the tidyr::separate() to separate one column into multiple columns, and tidyr::unite() to rejoin
+```{r}
+# Using separate to break column into species and scientific name 
+
+sf_trees_sep <- sf_trees %>% 
+  separate(species, into = c('spp_scientific', 'spp_common'), sep = ' :: ')
+
+sf_trees_unite <- sf_trees %>% 
+  unite('id_status', tree_id:species) # or could use commas to join specific columns not in a row 
+```
+
