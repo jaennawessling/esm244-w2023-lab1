@@ -62,7 +62,6 @@ ggplot(data = blackwood_acacia, aes(x = longitude, y = latitude)) +
 ```
 
 
-
 ### Use the tidyr::separate() to separate one column into multiple columns, and tidyr::unite() to rejoin
 ```{r}
 # Using separate to break column into species and scientific name 
@@ -73,4 +72,56 @@ sf_trees_sep <- sf_trees %>%
 sf_trees_unite <- sf_trees %>% 
   unite('id_status', tree_id:species) # or could use commas to join specific columns not in a row 
 ```
+
+
+### Make some actual maps! 
+```{r}
+# Spacial / simple features map 
+blackwood_acacia_sf <- blackwood_acacia %>% 
+  drop_na(longitude, latitude) %>% 
+  st_as_sf(coords = c('longitude', 'latitude')) # from the sf package - turn spacial & temporal data and turn it into a geometry feature (a point) 
+
+st_crs(blackwood_acacia_sf) <- 4326
+# telling R this coordinate reference system is important
+# numeric code - indicates basic latitude and longitude coordinate reference system in degrees 
+
+ggplot(data = blackwood_acacia_sf) + 
+  geom_sf(color = 'darkgreen') + # plots geometrical special features (always looks for the geometry column as the aesthetics to map the x & y)
+  theme_minimal()
+```
+
+### Read in SF streets data 
+```{r}
+sf_map_sf <- read_sf(here('data', 'sf_map','tl_2017_06075_roads.shp')) %>%  # reads in spacial data as a simple feature 
+
+# st_crs(sf_map_sf) # tells us about the crs 
+# want to change the crs (before we knew what it was so we could just type it in, but this one is different)
+
+# we want to tranform it into the one we want
+st_transform(4326)
+
+st_crs(sf_map_sf) # now it's where we want it to be 
+```
+
+
+
+### Let's create a plot now 
+```{r}
+ggplot() +
+  geom_sf(data = sf_map_sf, size = 0.1, color = 'darkgrey') + 
+  geom_sf(data = blackwood_acacia_sf, color = 
+          'red', size = 0.5) + 
+            theme_void() + 
+            labs(title = "Blackwood acacias in San Francisco")
+```
+
+### Interactive map! 
+```{r}
+tmap_mode('view')
+tm_shape(blackwood_acacia_sf) +
+  tm_dots()
+# creating a shape using this data with dot shapes 
+```
+
+
 
